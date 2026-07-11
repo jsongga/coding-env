@@ -1,23 +1,43 @@
 # My Development Environment Setup
 
-Welcome to my personal development setup — a fully tuned environment built for speed, clarity, and modern workflows.
-It combines **WezTerm**, **Neovim (CyberNvim)**, and a set of CLI tools that make development smooth across languages like Go, C++, TypeScript, and Python.
+My personal development environment: **WezTerm** + **Neovim (LazyVim)**.
+
+The base configs are borrowed (WezTerm config from Omer Hamerman's / DevOps Toolbox's dotfiles, Neovim from the [LazyVim starter](https://github.com/LazyVim/starter)) and tweaked to taste.
 
 ---
 
-## 🧩 Features
+## 🧩 What's Here
 
-- ⚡ **CyberNvim** – a high-performance Neovim configuration with Lazy loading and LSP support
-- 💻 **WezTerm** – a fast GPU-accelerated terminal with Lua-based customization
-- 🧠 **Language Server Protocol (LSP)** and autocompletion
-- 🎨 **Custom keymaps**, themes, and UI tweaks for productivity
-- 🧰 Optimized for **Go**, **TypeScript**, **C++**, and **Python**
+```
+├── wezterm/wezterm.lua   # WezTerm terminal config
+└── nvim/                 # Full Neovim (LazyVim) config
+```
+
+### 💻 WezTerm
+
+- **Catppuccin Mocha** color scheme
+- **JetBrains Mono**, 16pt
+- Tab bar disabled, `RESIZE`-only window decorations, subtle macOS background blur
+- `Ctrl+Q` → toggle fullscreen, `Ctrl+'` → clear scrollback, `Ctrl+Click` → open link under cursor
+
+### ⚡ Neovim (LazyVim)
+
+Built on the LazyVim starter with these **extras** enabled: aerial, harpoon2, mini-files, mini-surround, DAP core, and language support for **Go, C/C++ (clangd), TypeScript, Python, Terraform, Docker, Helm, YAML, JSON, Markdown**.
+
+Personal tweaks on top:
+
+- **Go** (`lua/plugins/go.lua`) – gopls with `staticcheck`, `gofumpt`, unused-param analysis, auto-imports, and placeholders
+- **YAML** (`lua/plugins/conform.lua`) – format with `yamlfmt` (K8s-friendly: basic formatter, indentless arrays)
+- **AI** (`lua/plugins/opencode.lua`) – [opencode.nvim](https://github.com/NickvanDyke/opencode.nvim) with `<leader>o*` keymaps for ask/explain/prompt workflows
+- **Surround** (`lua/plugins/surround.lua`) – mini.surround with `sa`/`sd`/`gsr`-style mappings
+- **Keymaps** – `jj` and `jk` to escape insert mode
+- **Options** – line wrap on, manual folding
+
+Plugin versions are pinned in `nvim/lazy-lock.json`.
 
 ---
 
 ## 🚀 Prerequisites
-
-Before setting up, make sure you have the following installed:
 
 | Tool                | Description            | Install Command (macOS)       |
 | ------------------- | ---------------------- | ----------------------------- |
@@ -26,32 +46,37 @@ Before setting up, make sure you have the following installed:
 | **Git**             | Version control        | `brew install git`            |
 | **Node.js** + npm   | Required for LSPs      | `brew install node`           |
 | **Python 3** + pip  | For Python tooling     | `brew install python`         |
-| **ripgrep**, **fd** | Telescope dependencies | `brew install ripgrep fd`     |
+| **ripgrep**, **fd** | Picker dependencies    | `brew install ripgrep fd`     |
+| **yamlfmt**         | YAML formatter         | `brew install yamlfmt`        |
+| **JetBrains Mono**  | Terminal font          | `brew install --cask font-jetbrains-mono` |
 
 > 🧰 Linux users can install equivalents using `apt`, `dnf`, or `pacman`.
-> Windows users can use [scoop](https://scoop.sh/) or [winget](https://learn.microsoft.com/en-us/windows/package-manager/).
 
 ---
 
 ## ⚙️ Setup
 
-### 1. Clone This Repo
+### 1. Clone this repo
 
 ```bash
-git clone https://github.com/johnsongdev/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone https://github.com/jsongga/coding-env.git ~/coding-env
+cd ~/coding-env
 ```
 
-2. 🧩 Setup WezTerm
-
-Copy the WezTerm configuration:
+### 2. WezTerm
 
 ```bash
-cp wezterm-config.lua ~/.wezterm.lua
+mkdir -p ~/.config/wezterm
+cp wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 ```
 
-Or, if you prefer to keep things under .config:
+### 3. Neovim
 
-```mkdir -p ~/.config/wezterm
-cp wezterm-config.lua ~/.config/wezterm/wezterm.lua
+Back up any existing config first, then copy this one in:
+
+```bash
+mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
+cp -R nvim ~/.config/nvim
 ```
+
+Launch `nvim` — lazy.nvim will bootstrap itself and install all plugins on first run.
